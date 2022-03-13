@@ -192,7 +192,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7296343010079842794, guid: 267858b3fa891eb4d857c44355bee1fb, type: 3}
       propertyPath: m_SizeDelta.x
-      value: -800
+      value: -2000
       objectReference: {fileID: 0}
     - target: {fileID: 7296343010079842794, guid: 267858b3fa891eb4d857c44355bee1fb, type: 3}
       propertyPath: m_SizeDelta.y
@@ -336,6 +336,7 @@ GameObject:
   - component: {fileID: 1520643840}
   - component: {fileID: 1520643839}
   - component: {fileID: 1205009831}
+  - component: {fileID: 1520643838}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -343,6 +344,14 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!124 &1520643838
+Behaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1520643837}
+  m_Enabled: 1
 --- !u!20 &1520643839
 Camera:
   m_ObjectHideFlags: 0
@@ -369,7 +378,7 @@ Camera:
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
-  orthographic: 1
+  orthographic: 0
   orthographic size: 5
   m_Depth: -1
   m_CullingMask:
@@ -394,7 +403,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1520643837}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -10}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -608,11 +617,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4779173420034205006, guid: 961523189a7c5f84b9a3609d70dcde5c, type: 3}
       propertyPath: m_SizeDelta.x
-      value: -800
+      value: -2000
       objectReference: {fileID: 0}
     - target: {fileID: 4779173420034205006, guid: 961523189a7c5f84b9a3609d70dcde5c, type: 3}
       propertyPath: m_SizeDelta.y
       value: -100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4779173420034205006, guid: 961523189a7c5f84b9a3609d70dcde5c, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4779173420034205006, guid: 961523189a7c5f84b9a3609d70dcde5c, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4779173420034205006, guid: 961523189a7c5f84b9a3609d70dcde5c, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4779173420034205006, guid: 961523189a7c5f84b9a3609d70dcde5c, type: 3}
       propertyPath: m_LocalPosition.x
