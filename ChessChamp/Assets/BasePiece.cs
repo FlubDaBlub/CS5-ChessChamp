@@ -66,6 +66,9 @@ public abstract class BasePiece : EventTrigger
 
       CreateCellPath(-1,-1, mMovement.z);
       CreateCellPath(1,-1, mMovement.z);
+
+      CreateCellPath(1, 1, mMovement.z);
+      CreateCellPath(-1, 1, mMovement.z);
     }
     protected void ShowCells() {
       foreach (Cell cell in mHighlightedCells)
