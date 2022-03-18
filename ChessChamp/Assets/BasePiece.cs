@@ -77,12 +77,15 @@ public abstract class BasePiece : EventTrigger
     protected void ShowCells() {
       foreach(Cell cell in mHighlightedCells)
         cell.mOutlineImage.enabled = true;
+        Debug.Log("TRUE");
     }
 
     protected void ClearCells() {
       foreach(Cell cell in mHighlightedCells)
         cell.mOutlineImage.enabled = false;
 
+
+        Debug.Log("FALSE");
       mHighlightedCells.Clear();
     }
 
