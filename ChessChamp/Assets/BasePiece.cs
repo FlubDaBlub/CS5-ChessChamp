@@ -29,7 +29,7 @@ public abstract class BasePiece : EventTrigger
       mRectTransform = GetComponent<RectTransform>();
     }
 
-    public virtual void Place(Cell newCell) {
+    public void Place(Cell newCell) {
       mCurrentCell = newCell;
       mOriginalCell = newCell;
       mCurrentCell.mCurrentPiece = this;
@@ -38,78 +38,80 @@ public abstract class BasePiece : EventTrigger
       gameObject.SetActive(true);
     }
 
+    public void Reset() {
+      Kill();
+      Place(mOriginalCell);
+    }
+    public virtual void Kill() {
+      mCurrentCell.mCurrentPiece = null;
+      gameObject.SetActive(false);
+    }
+
     private void CreateCellPath(int xDirection, int yDirection, int movement) {
-      // Target position
       int currentX = mCurrentCell.mBoardPosition.x;
       int currentY = mCurrentCell.mBoardPosition.y;
 
-      //Check each cell
-      for(int i = 1; i <= movement; i++) {
+      for (int i = 1; i <= movement; i++) {
         currentX += xDirection;
         currentY += yDirection;
-
-        // TODO: Get the state of the target cell
-
-        // Add to list
         mHighlightedCells.Add(mCurrentCell.mBoard.mAllCells[currentX, currentY]);
       }
     }
-
     protected virtual void CheckPathing() {
-      // Horizontal
-      CreateCellPath(1, 0, mMovement.x);
-      CreateCellPath(-1, 0, mMovement.x);
+      CreateCellPath(1,0, mMovement.x);
+      CreateCellPath(-1,0, mMovement.x);
 
-      // Vertical
-      CreateCellPath(0, 1, mMovement.y);
-      CreateCellPath(0, -1, mMovement.y);
+      CreateCellPath(0,1, mMovement.y);
+      CreateCellPath(0,-1, mMovement.y);
 
+      CreateCellPath(-1,-1, mMovement.z);
+      CreateCellPath(1,-1, mMovement.z);
 
-      // Upper diagonal
       CreateCellPath(1, 1, mMovement.z);
       CreateCellPath(-1, 1, mMovement.z);
-
-      // Lower diagonal
-      CreateCellPath(-1, -1, mMovement.z);
-      CreateCellPath(1, -1, mMovement.z);
     }
-
     protected void ShowCells() {
-      foreach(Cell cell in mHighlightedCells)
+      foreach (Cell cell in mHighlightedCells)
         cell.mOutlineImage.enabled = true;
         Debug.Log("TRUE");
     }
-
     protected void ClearCells() {
-      foreach(Cell cell in mHighlightedCells)
+      foreach (Cell cell in mHighlightedCells)
         cell.mOutlineImage.enabled = false;
-
-
-        Debug.Log("FALSE");
-      mHighlightedCells.Clear();
+    }
+    protected virtual void Move() {
+      mTargetCell.RemovePiece();
+      mCurrentCell.mCurrentPiece = null;
+      mCurrentCell = mTargetCell;
+      mCurrentCell.mCurrentPiece = this;
+      transform.position = mCurrentCell.transform.position;
+      mTargetCell = null;
     }
 
     public override void OnBeginDrag(PointerEventData eventData) {
       base.OnBeginDrag(eventData);
-
-      // Test for cells
       CheckPathing();
-
-      // Show valid cells
       ShowCells();
     }
-
     public override void OnDrag(PointerEventData eventData) {
       base.OnDrag(eventData);
-
-      // Follow pointer
       transform.position += (Vector3)eventData.delta;
+      foreach (Cell cell in mHighlightedCells) {
+        if (RectTransformUtility.RectangleContainsScreenPoint(cell.mRectTransform, Input.mousePosition)) {
+          mTargetCell = cell;
+          break;
+        }
+        mTargetCell = null;
+      }
     }
-
     public override void OnEndDrag(PointerEventData eventData) {
       base.OnEndDrag(eventData);
-
-      // Hide
       ClearCells();
+
+      if (!mTargetCell) {
+        transform.position = mCurrentCell.gameObject.transform.position;
+        return;
+      }
+      Move();
     }
 }

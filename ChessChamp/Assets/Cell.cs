@@ -1,8 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.EventSystems;
 
 public class Cell : MonoBehaviour
 {
@@ -22,5 +19,10 @@ public class Cell : MonoBehaviour
       mBoardPosition = newBoardPosition;
       mBoard = newBoard;
       mRectTransform = GetComponent<RectTransform>();
+    }
+    public void RemovePiece() {
+      if (mCurrentPiece != null) {
+        mCurrentPiece.Kill();
+      }
     }
 }
