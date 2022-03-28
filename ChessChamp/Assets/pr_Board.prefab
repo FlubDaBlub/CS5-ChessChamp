@@ -49,7 +49,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95506c73520cac8458dee29944765520, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mCellPrefab: {fileID: 1318287032508136091, guid: 8e08502eb23035745922c17c96f1bac3, type: 3}
+  mCellPrefab: {fileID: 1827010725848460081, guid: c710b9a145d984649aa01406084ca708, type: 3}
 --- !u!223 &7696851937184818230
 Canvas:
   m_ObjectHideFlags: 0
