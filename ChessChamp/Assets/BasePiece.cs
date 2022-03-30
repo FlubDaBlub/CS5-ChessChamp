@@ -42,6 +42,7 @@ public abstract class BasePiece : EventTrigger
       Kill();
       Place(mOriginalCell);
     }
+
     public virtual void Kill() {
       mCurrentCell.mCurrentPiece = null;
       gameObject.SetActive(false);
@@ -57,28 +58,62 @@ public abstract class BasePiece : EventTrigger
         mHighlightedCells.Add(mCurrentCell.mBoard.mAllCells[currentX, currentY]);
       }
     }
+
     protected virtual void CheckPathing() {
-      CreateCellPath(1,0, mMovement.x);
-      CreateCellPath(-1,0, mMovement.x);
+      int currentX = mCurrentCell.mBoardPosition.x;
+      int currentY = mCurrentCell.mBoardPosition.y;
 
-      CreateCellPath(0,1, mMovement.y);
-      CreateCellPath(0,-1, mMovement.y);
+      if(currentX < 7) {
+        CreateCellPath(1,0, mMovement.x);
+      }
 
-      CreateCellPath(-1,-1, mMovement.z);
-      CreateCellPath(1,-1, mMovement.z);
+      if(currentX > .6) {
+        CreateCellPath(-1,0, mMovement.x);
+      }
 
-      CreateCellPath(1, 1, mMovement.z);
-      CreateCellPath(-1, 1, mMovement.z);
+      if(currentY < 3.5) {
+        CreateCellPath(0,1, mMovement.y);
+      }
+
+      if(currentY > 0) {
+        CreateCellPath(0,-1, mMovement.y);
+      }
+
+      if(currentX > .6) {
+        if(currentY > 0) {
+          CreateCellPath(-1,-1, mMovement.z);
+        }
+      }
+
+      if(currentX < 7) {
+        if(currentY > 0) {
+          CreateCellPath(1,-1, mMovement.z);
+        }
+      }
+      if(currentX < 7) {
+        if(currentY < 3.5) {
+        CreateCellPath(1, 1, mMovement.z);
+        }
+      }
+
+      if(currentX > .6) {
+        if(currentY < 3.5) {
+        CreateCellPath(-1, 1, mMovement.z);
+        }
+      }
     }
+
     protected void ShowCells() {
       foreach (Cell cell in mHighlightedCells)
         cell.mOutlineImage.enabled = true;
         Debug.Log("TRUE");
     }
+
     protected void ClearCells() {
       foreach (Cell cell in mHighlightedCells)
         cell.mOutlineImage.enabled = false;
     }
+
     protected virtual void Move() {
       mTargetCell.RemovePiece();
       mCurrentCell.mCurrentPiece = null;
@@ -93,6 +128,7 @@ public abstract class BasePiece : EventTrigger
       CheckPathing();
       ShowCells();
     }
+
     public override void OnDrag(PointerEventData eventData) {
       base.OnDrag(eventData);
       transform.position += (Vector3)eventData.delta;
@@ -104,6 +140,7 @@ public abstract class BasePiece : EventTrigger
         mTargetCell = null;
       }
     }
+
     public override void OnEndDrag(PointerEventData eventData) {
       base.OnEndDrag(eventData);
       ClearCells();
