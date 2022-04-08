@@ -71,7 +71,7 @@ public abstract class BasePiece : EventTrigger
         CreateCellPath(-1,0, mMovement.x);
       }
 
-      if(currentY < 3.5) {
+      if(currentY < 7) {
         CreateCellPath(0,1, mMovement.y);
       }
 
@@ -90,14 +90,15 @@ public abstract class BasePiece : EventTrigger
           CreateCellPath(1,-1, mMovement.z);
         }
       }
+
       if(currentX < 7) {
-        if(currentY < 3.5) {
+        if(currentY < 7) {
         CreateCellPath(1, 1, mMovement.z);
         }
       }
 
       if(currentX > .6) {
-        if(currentY < 3.5) {
+        if(currentY < 7) {
         CreateCellPath(-1, 1, mMovement.z);
         }
       }
