@@ -6,6 +6,10 @@ using UnityEngine;
 
 public class PieceManager : MonoBehaviour
 {
+
+    [HideInInspector]
+    public bool mIsKingAlive = true;
+
     public GameObject mPiecePrefab;
 
     private List<BasePiece> mWhitePieces = null;
@@ -33,6 +37,8 @@ public class PieceManager : MonoBehaviour
 
       PlacePieces(1, 0, mWhitePieces, board);
       PlacePieces(6, 7, mBlackPieces, board);
+
+      SwitchSides(Color.black);
     }
 
     private List<BasePiece> CreatePieces(Color teamColor, Color32 spriteColor, Board board)
@@ -71,10 +77,41 @@ public class PieceManager : MonoBehaviour
 
         return newPiece;
     }
+
     private void PlacePieces(int pawnRow, int royaltyRow, List<BasePiece> pieces, Board board) {
       for (int i = 0; i < 8; i++) {
         pieces[i].Place(board.mAllCells[i, pawnRow]);
         pieces[i + 8].Place(board.mAllCells[i, royaltyRow]);
+      }
+    }
+
+    private void SetInteractive(List<BasePiece> allPieces, bool value) {
+      foreach(BasePiece piece in allPieces) {
+        piece.enabled = value;
+      }
+    }
+
+    public void SwitchSides(Color color) {
+      //Resets an ended game
+      if(!mIsKingAlive) {
+        ResetPieces();
+        mIsKingAlive = true;
+        color = Color.black;
+      }
+
+      bool isBlackTurn = color == Color.white ? true : false;
+
+      SetInteractive(mWhitePieces, !isBlackTurn);
+      SetInteractive(mBlackPieces, isBlackTurn);
+    }
+
+    public void ResetPieces() {
+      foreach(BasePiece piece in mWhitePieces) {
+        piece.Reset();
+      }
+
+      foreach(BasePiece piece in mBlackPieces) {
+        piece.Reset();
       }
     }
 }

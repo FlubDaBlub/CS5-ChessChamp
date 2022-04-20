@@ -55,6 +55,19 @@ public abstract class BasePiece : EventTrigger
       for (int i = 1; i <= movement; i++) {
         currentX += xDirection;
         currentY += yDirection;
+
+        CellState cellState = CellState.None;
+        cellState = mCurrentCell.mBoard.ValidateCell(currentX, currentY, this);
+
+        if(cellState == CellState.Enemy) {
+          mHighlightedCells.Add(mCurrentCell.mBoard.mAllCells[currentX, currentY]);
+          break;
+        }
+
+        if(cellState != CellState.Free) {
+          break;
+        }
+
         mHighlightedCells.Add(mCurrentCell.mBoard.mAllCells[currentX, currentY]);
       }
     }
@@ -63,45 +76,21 @@ public abstract class BasePiece : EventTrigger
       int currentX = mCurrentCell.mBoardPosition.x;
       int currentY = mCurrentCell.mBoardPosition.y;
 
-      if(currentX < 7) {
         CreateCellPath(1,0, mMovement.x);
-      }
 
-      if(currentX > .6) {
         CreateCellPath(-1,0, mMovement.x);
-      }
 
-      if(currentY < 7) {
         CreateCellPath(0,1, mMovement.y);
-      }
 
-      if(currentY > 0) {
         CreateCellPath(0,-1, mMovement.y);
-      }
 
-      if(currentX > .6) {
-        if(currentY > 0) {
-          CreateCellPath(-1,-1, mMovement.z);
-        }
-      }
+        CreateCellPath(-1,-1, mMovement.z);
 
-      if(currentX < 7) {
-        if(currentY > 0) {
-          CreateCellPath(1,-1, mMovement.z);
-        }
-      }
+        CreateCellPath(1,-1, mMovement.z);
 
-      if(currentX < 7) {
-        if(currentY < 7) {
         CreateCellPath(1, 1, mMovement.z);
-        }
-      }
 
-      if(currentX > .6) {
-        if(currentY < 7) {
         CreateCellPath(-1, 1, mMovement.z);
-        }
-      }
     }
 
     protected void ShowCells() {
@@ -150,6 +139,9 @@ public abstract class BasePiece : EventTrigger
         transform.position = mCurrentCell.gameObject.transform.position;
         return;
       }
+
       Move();
+
+      mPieceManager.SwitchSides(mColor);
     }
 }
