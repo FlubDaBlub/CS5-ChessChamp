@@ -8,7 +8,7 @@ public abstract class BasePiece : EventTrigger
 {
     [HideInInspector]
     public Color mColor = Color.clear;
-    public bool mIsFirstMove = true;
+    public bool hasMoved = false;
 
     protected Cell mOriginalCell = null;
     protected Cell mCurrentCell = null;
@@ -29,7 +29,7 @@ public abstract class BasePiece : EventTrigger
       mRectTransform = GetComponent<RectTransform>();
     }
 
-    public void Place(Cell newCell) {
+    public virtual void Place(Cell newCell) {
       mCurrentCell = newCell;
       mOriginalCell = newCell;
       mCurrentCell.mCurrentPiece = this;
@@ -46,6 +46,7 @@ public abstract class BasePiece : EventTrigger
     public virtual void Kill() {
       mCurrentCell.mCurrentPiece = null;
       gameObject.SetActive(false);
+      hasMoved = false;
     }
 
     private void CreateCellPath(int xDirection, int yDirection, int movement) {
