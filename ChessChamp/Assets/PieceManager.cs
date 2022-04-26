@@ -14,11 +14,12 @@ public class PieceManager : MonoBehaviour
 
     private List<BasePiece> mWhitePieces = null;
     private List<BasePiece> mBlackPieces = null;
+    private List<BasePiece> mPromotedPieces = new List<BasePiece>();
 
     private string[] mPieceOrder = new string[16]
     {
       "P", "P", "P", "P", "P", "P", "P", "P",
-      "R", "KN", "B", "K", "Q", "B", "KN", "R"
+      "R", "KN", "B", "Q", "K", "B", "KN", "R"
     };
 
     private Dictionary<string, Type> mPieceLibrary = new Dictionary<string, Type>() {
@@ -103,15 +104,45 @@ public class PieceManager : MonoBehaviour
 
       SetInteractive(mWhitePieces, !isBlackTurn);
       SetInteractive(mBlackPieces, isBlackTurn);
+
+      foreach(BasePiece piece in mPromotedPieces) {
+        bool isBlack = piece.mColor != Color.white ? true : false;
+        bool isOnTeam = isBlack == true ? isBlackTurn : !isBlackTurn;
+        piece.enabled = isOnTeam;
+      }
     }
 
     public void ResetPieces() {
-      foreach(BasePiece piece in mWhitePieces) {
-        piece.Reset();
+
+          foreach (BasePiece piece in mWhitePieces) {
+              piece.Kill();
+          }
+
+          foreach (BasePiece piece in mBlackPieces) {
+              piece.Kill();
+          }
+
+          foreach (BasePiece piece in mPromotedPieces) {
+              piece.Kill();
+              Destroy(piece.gameObject);
+          }
+
+          mPromotedPieces.Clear();
+
+          foreach (BasePiece piece in mWhitePieces) {
+              piece.Reset();
+          }
+
+          foreach (BasePiece piece in mBlackPieces) {
+              piece.Reset();
+          }
       }
 
-      foreach(BasePiece piece in mBlackPieces) {
-        piece.Reset();
+      public void PromotePiece(Pawn pawn, Cell cell, Color teamColor, Color spriteColor) {
+        pawn.Kill();
+        BasePiece promotedPiece = CreatePiece(typeof(Queen));
+        promotedPiece.Setup(teamColor, spriteColor, this);
+        promotedPiece.Place(cell);
+        mPromotedPieces.Add(promotedPiece);
       }
-    }
 }
