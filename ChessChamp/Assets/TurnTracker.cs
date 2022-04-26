@@ -10,6 +10,7 @@ public class TurnTracker : MonoBehaviour {
 
     void start() {
       m_SpriteRenderer = GetComponent<SpriteRenderer>();
+      m_SpriteRenderer.enabled = true;
       m_SpriteRenderer.color = new Color32(80, 124, 159, 255);
     }
 
