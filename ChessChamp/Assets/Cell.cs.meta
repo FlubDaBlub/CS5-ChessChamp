@@ -3,7 +3,11 @@ guid: fe957ca0f52b1ca4f983518e5dd6cdff
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - mOutlineImage: {fileID: 669402062806795081, guid: 326fed1e2cb9cdd4793bd2ab914448e9, type: 3}
+  - mBoard: {instanceID: 0}
+  - mRectTransform: {instanceID: 0}
+  - mCurrentPiece: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
