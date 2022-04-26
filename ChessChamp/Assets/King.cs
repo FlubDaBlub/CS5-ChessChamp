@@ -10,4 +10,9 @@ public class King : BasePiece
 
     GetComponent<Image>().sprite = Resources.Load<Sprite>("T_King");
   }
+
+  public override void Kill() {
+    base.Kill();
+    mPieceManager.mIsKingAlive = false;
+  }
 }
