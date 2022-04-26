@@ -11,19 +11,22 @@ public class Knight : BasePiece
     GetComponent<Image>().sprite = Resources.Load<Sprite>("T_Knight");
   }
 
-  private void CreateCellPath(int moveUp) {
+  protected override void CheckPathing() {
+    CreateCellPath();
+  }
+
+  private void CreateCellPath() {
     int currentX = mCurrentCell.mBoardPosition.x;
     int currentY = mCurrentCell.mBoardPosition.y;
 
-    MatchesState(currentX - 2, currentY + (1 * moveUp));
-    MatchesState(currentX - 1, currentY + (2 * moveUp));
-    MatchesState(currentX + 1, currentY + (2 * moveUp));
-    MatchesState(currentX + 2, currentY + (1 * moveUp));
-  }
-
-  protected override void CheckPathing() {
-    CreateCellPath(1);
-    CreateCellPath(-1);
+    MatchesState(currentX - 2, currentY + 1);
+    MatchesState(currentX - 1, currentY + 2);
+    MatchesState(currentX + 1, currentY + 2);
+    MatchesState(currentX + 2, currentY + 1);
+    MatchesState(currentX + 2, currentY - 1);
+    MatchesState(currentX + 1, currentY - 2);
+    MatchesState(currentX - 1, currentY - 2);
+    MatchesState(currentX - 2, currentY - 1);
   }
 
   private void MatchesState(int targetX, int targetY) {
@@ -33,6 +36,4 @@ public class Knight : BasePiece
     if(cellState != CellState.Friendly && cellState != CellState.OutOfBounds)
       mHighlightedCells.Add(mCurrentCell.mBoard.mAllCells[targetX, targetY]);
   }
-
-
 }
