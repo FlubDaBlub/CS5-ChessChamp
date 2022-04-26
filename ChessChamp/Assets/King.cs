@@ -10,7 +10,7 @@ public class King : BasePiece
 
   public override void Setup(Color newTeamColor, Color32 newSpriteColor, PieceManager newPieceManager) {
     base.Setup(newTeamColor, newSpriteColor, newPieceManager);
-
+    mMovement = new Vector3Int(1, 1, 1);
     GetComponent<Image>().sprite = Resources.Load<Sprite>("T_King");
   }
 
@@ -40,6 +40,9 @@ public class King : BasePiece
     if(rook.mCastleTrigger != mCurrentCell)
       return false;
 
+    if(rook.mColor != mColor || rook.hasMoved)
+      return false;
+
     return true;
   }
 
@@ -60,16 +63,9 @@ public class King : BasePiece
     Cell rookCell = mCurrentCell.mBoard.mAllCells[currentX + (count * direction), currentY];
     Rook rook = null;
 
-    if(rookCell.mCurrentPiece != null) {
-      if(rookCell.mCurrentPiece is Rook)
-        rook = (Rook)rookCell.mCurrentPiece;
+    if(rookCell.mCurrentPiece is Rook) {
+      rook = (Rook)rookCell.mCurrentPiece;
     }
-
-    if(rook == null)
-      return null;
-
-    if(rook.mColor != mColor || rook.hasMoved)
-      return null;
 
     if(rook != null)
       mHighlightedCells.Add(rook.mCastleTrigger);

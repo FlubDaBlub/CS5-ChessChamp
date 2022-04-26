@@ -40,6 +40,7 @@ public abstract class BasePiece : EventTrigger
 
     public void Reset() {
       Kill();
+      hasMoved = false;
       Place(mOriginalCell);
     }
 
@@ -48,6 +49,13 @@ public abstract class BasePiece : EventTrigger
       gameObject.SetActive(false);
       hasMoved = false;
     }
+
+    public bool HasMove() {
+       CheckPathing();
+       if (mHighlightedCells.Count == 0)
+           return false;
+       return true;
+   }
 
     private void CreateCellPath(int xDirection, int yDirection, int movement) {
       int currentX = mCurrentCell.mBoardPosition.x;
