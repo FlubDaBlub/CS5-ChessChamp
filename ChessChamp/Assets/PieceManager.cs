@@ -12,17 +12,17 @@ public class PieceManager : MonoBehaviour
 
     public GameObject mPiecePrefab;
 
-    private List<BasePiece> mWhitePieces = null;
-    private List<BasePiece> mBlackPieces = null;
+    public List<BasePiece> mWhitePieces = null;
+    public List<BasePiece> mBlackPieces = null;
     private List<BasePiece> mPromotedPieces = new List<BasePiece>();
 
-    private string[] mPieceOrder = new string[16]
+    public string[] mPieceOrder = new string[16]
     {
       "P", "P", "P", "P", "P", "P", "P", "P",
       "R", "KN", "B", "Q", "K", "B", "KN", "R"
     };
 
-    private Dictionary<string, Type> mPieceLibrary = new Dictionary<string, Type>() {
+    public Dictionary<string, Type> mPieceLibrary = new Dictionary<string, Type>() {
       {"P", typeof(Pawn)},
       {"R", typeof(Rook)},
       {"KN", typeof(Knight)},
