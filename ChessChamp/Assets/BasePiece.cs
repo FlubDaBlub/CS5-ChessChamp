@@ -120,6 +120,7 @@ public abstract class BasePiece : EventTrigger
       mCurrentCell.mCurrentPiece = this;
       transform.position = mCurrentCell.transform.position;
       mTargetCell = null;
+      hasMoved = true;
     }
 
     public override void OnBeginDrag(PointerEventData eventData) {
