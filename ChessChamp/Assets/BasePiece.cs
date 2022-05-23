@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,9 +10,18 @@ public abstract class BasePiece : EventTrigger
     [HideInInspector]
     public Color mColor = Color.clear;
     public bool hasMoved = false;
+    public bool isKing = false;
+    private bool anyChecks = false;
 
     protected Cell mOriginalCell = null;
     protected Cell mCurrentCell = null;
+
+    public int whiteKingX = 4;
+    public int whiteKingY = 0;
+    public int blackKingX = 4;
+    public int blackKingY = 7;
+
+    public int turnTracker = 0;
 
     protected RectTransform mRectTransform = null;
     protected PieceManager mPieceManager;
@@ -102,6 +112,40 @@ public abstract class BasePiece : EventTrigger
         CreateCellPath(-1, 1, mMovement.z);
     }
 
+    protected virtual void kingFinder(BasePiece piece, bool black) {
+
+      CreateCellPath(1,0, mMovement.x);
+
+      CreateCellPath(-1,0, mMovement.x);
+
+      CreateCellPath(0,1, mMovement.y);
+
+      CreateCellPath(0,-1, mMovement.y);
+
+      CreateCellPath(-1,-1, mMovement.z);
+
+      CreateCellPath(1,-1, mMovement.z);
+
+      CreateCellPath(1, 1, mMovement.z);
+
+      CreateCellPath(-1, 1, mMovement.z);
+
+      foreach (Cell cell in mHighlightedCells) {
+        int cellX = cell.mBoardPosition.x;
+        int cellY = cell.mBoardPosition.y;
+        if (black == true) {
+          if (cellX == whiteKingX && cellY == whiteKingY) {
+            isKing = true;
+          }
+        }
+        else {
+          if (cellX == blackKingX && cellY == blackKingY) {
+            isKing = true;
+          }
+        }
+      }
+    }
+
     protected void ShowCells() {
       foreach (Cell cell in mHighlightedCells)
         cell.mOutlineImage.enabled = true;
@@ -114,6 +158,14 @@ public abstract class BasePiece : EventTrigger
     }
 
     protected virtual void Move() {
+      if (mCurrentCell.mBoardPosition.x == whiteKingX && mCurrentCell.mBoardPosition.y == whiteKingY) {
+        whiteKingX = whiteKingX + mTargetCell.mBoardPosition.x - mCurrentCell.mBoardPosition.x;
+        whiteKingY = whiteKingY + mTargetCell.mBoardPosition.y - mCurrentCell.mBoardPosition.y;
+      }
+      if (mCurrentCell.mBoardPosition.x == blackKingX && mCurrentCell.mBoardPosition.y == blackKingY) {
+        blackKingX = blackKingX + mTargetCell.mBoardPosition.x - mCurrentCell.mBoardPosition.x;
+        blackKingY = blackKingY + mTargetCell.mBoardPosition.y - mCurrentCell.mBoardPosition.y;
+      }
       mTargetCell.RemovePiece();
       mCurrentCell.mCurrentPiece = null;
       mCurrentCell = mTargetCell;
@@ -150,8 +202,41 @@ public abstract class BasePiece : EventTrigger
         return;
       }
 
-      Move();
+      bool anyChecks = findChecks();
+      if(anyChecks == true) {
 
+      }
+      else {
+        Move();
+      }
+      ClearCells();
       mPieceManager.SwitchSides(mColor);
+      isKing = false;
+      anyChecks = false;
+      turnTracker = turnTracker + 1;
+    }
+
+    public bool findChecks() {
+      if (turnTracker % 2 == 0) {
+        // white is moving
+        foreach(BasePiece wPiece in mPieceManager.mWhitePieces) {
+// it does 16 of these
+          kingFinder(wPiece, false);
+          if (isKing == true) {
+            anyChecks = true;
+          }
+        }
+      }
+      else {
+        // black is moving
+        foreach(BasePiece bPiece in mPieceManager.mBlackPieces) {
+// it does 16 of these
+          kingFinder(bPiece, true);
+          if (isKing == true) {
+            anyChecks = true;
+          }
+        }
+      }
+      return anyChecks;
     }
 }
