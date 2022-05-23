@@ -6,6 +6,10 @@ using UnityEngine.EventSystems;
 
 public class King : BasePiece
 {
+
+  public Rook mLeftRook = null;
+  public Rook mRightRook = null;
+
   public override void Setup(Color newTeamColor, Color32 newSpriteColor, PieceManager newPieceManager) {
     base.Setup(newTeamColor, newSpriteColor, newPieceManager);
     mMovement = new Vector3Int(1, 1, 1);
@@ -21,9 +25,7 @@ public class King : BasePiece
     int currentX = getX();
     int currentY = getY();
     mLeftRook = GetRook(-1, 4, currentX, currentY);
-    Debug.Log("L: " + mLeftRook);
     mRightRook = GetRook(1, 3, currentX, currentY);
-    Debug.Log("R: " + mRightRook);
     base.OnBeginDrag(eventData);
   }
 
