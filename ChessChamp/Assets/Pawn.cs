@@ -1,19 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class Pawn : BasePiece
 {
+  private bool hasMoved = false;
+
   public override void Setup(Color newTeamColor, Color32 newSpriteColor, PieceManager newPieceManager) {
     base.Setup(newTeamColor, newSpriteColor, newPieceManager);
-
+    hasMoved = false;
     mMovement = mColor == Color.white ? new Vector3Int(0, 1, 1) : new Vector3Int(0, -1, -1);
     GetComponent<Image>().sprite = Resources.Load<Sprite>("T_Pawn");
   }
 
   protected override void Move() {
     base.Move();
+    hasMoved = true;
     PromotionCheck();
   }
 
@@ -26,6 +30,49 @@ public class Pawn : BasePiece
       return true;
     }
     return false;
+  }
+
+  public override void EnPassant(Cell mTargetCell, int currentX, int currentY) {
+
+    int targetX = mTargetCell.mBoardPosition.x;
+    int targetY = mTargetCell.mBoardPosition.y;
+
+    Sprite sprite = mCurrentCell.mCurrentPiece.GetComponent<Image>().sprite;
+
+    if(Math.Abs(targetY - currentY) == 2) {
+      if(mColor == Color.white) {
+        for(int i = 0; i < 8; i++) {
+          Cell findPawn = mCurrentCell.mBoard.mAllCells[i, 3];
+          if(findPawn.mCurrentPiece != null) {
+            Sprite isPawnSprite = findPawn.mCurrentPiece.GetComponent<Image>().sprite;
+            if(isPawnSprite == sprite && findPawn.mCurrentPiece.mColor == Color.black) {
+              if(targetX + 1 == findPawn.mBoardPosition.x) {
+                bRight = true;
+              }
+              if(targetX - 1 == findPawn.mBoardPosition.x) {
+                //fill
+              }
+            }
+          }
+        }
+      }
+      else if(mColor == Color.black) {
+        for(int i = 0; i < 8; i++) {
+          Cell findPawn = mCurrentCell.mBoard.mAllCells[i, 4];
+          if(findPawn.mCurrentPiece != null) {
+            Sprite isPawnSprite = findPawn.mCurrentPiece.GetComponent<Image>().sprite;
+            if(isPawnSprite == sprite && findPawn.mCurrentPiece.mColor == Color.white) {
+              if(targetX + 1 == findPawn.mBoardPosition.x) {
+// fill
+              }
+              if(targetX - 1 == findPawn.mBoardPosition.x) {
+                // fill
+              }
+            }
+          }
+        }
+      }
+    }
   }
 
   private void PromotionCheck() {

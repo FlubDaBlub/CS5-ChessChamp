@@ -9,12 +9,15 @@ public abstract class BasePiece : EventTrigger
 {
     [HideInInspector]
     public Color mColor = Color.clear;
-    public bool hasMoved = false;
     public bool isKing = false;
-    private bool anyChecks = false;
+    public bool lastMove = false;
+
+    public bool bRight = false;
+    public bool plsHelp = true;
 
     protected Cell mOriginalCell = null;
     protected Cell mCurrentCell = null;
+    protected Cell mOtherCell = null;
 
     public int whiteKingX = 4;
     public int whiteKingY = 0;
@@ -22,6 +25,7 @@ public abstract class BasePiece : EventTrigger
     public int blackKingY = 7;
 
     public int turnTracker = 0;
+    public int countdown = -1;
 
     protected RectTransform mRectTransform = null;
     protected PieceManager mPieceManager;
@@ -50,14 +54,12 @@ public abstract class BasePiece : EventTrigger
 
     public void Reset() {
       Kill();
-      hasMoved = false;
       Place(mOriginalCell);
     }
 
     public virtual void Kill() {
       mCurrentCell.mCurrentPiece = null;
       gameObject.SetActive(false);
-      hasMoved = false;
     }
 
     public bool HasMove() {
@@ -133,6 +135,7 @@ public abstract class BasePiece : EventTrigger
       foreach (Cell cell in mHighlightedCells) {
         int cellX = cell.mBoardPosition.x;
         int cellY = cell.mBoardPosition.y;
+//        Debug.Log(black);
         if (black == true) {
           if (cellX == whiteKingX && cellY == whiteKingY) {
             isKing = true;
@@ -158,20 +161,28 @@ public abstract class BasePiece : EventTrigger
     }
 
     protected virtual void Move() {
-      if (mCurrentCell.mBoardPosition.x == whiteKingX && mCurrentCell.mBoardPosition.y == whiteKingY) {
-        whiteKingX = whiteKingX + mTargetCell.mBoardPosition.x - mCurrentCell.mBoardPosition.x;
-        whiteKingY = whiteKingY + mTargetCell.mBoardPosition.y - mCurrentCell.mBoardPosition.y;
-      }
-      if (mCurrentCell.mBoardPosition.x == blackKingX && mCurrentCell.mBoardPosition.y == blackKingY) {
-        blackKingX = blackKingX + mTargetCell.mBoardPosition.x - mCurrentCell.mBoardPosition.x;
-        blackKingY = blackKingY + mTargetCell.mBoardPosition.y - mCurrentCell.mBoardPosition.y;
-      }
+//      if (mCurrentCell.mBoardPosition.x == whiteKingX && mCurrentCell.mBoardPosition.y == whiteKingY) {
+//        whiteKingX = whiteKingX + mTargetCell.mBoardPosition.x - mCurrentCell.mBoardPosition.x;
+//        whiteKingY = whiteKingY + mTargetCell.mBoardPosition.y - mCurrentCell.mBoardPosition.y;
+//      }
+//      if (mCurrentCell.mBoardPosition.x == blackKingX && mCurrentCell.mBoardPosition.y == blackKingY) {
+//        blackKingX = blackKingX + mTargetCell.mBoardPosition.x - mCurrentCell.mBoardPosition.x;
+//        blackKingY = blackKingY + mTargetCell.mBoardPosition.y - mCurrentCell.mBoardPosition.y;
+//      }
       mTargetCell.RemovePiece();
       mCurrentCell.mCurrentPiece = null;
       mCurrentCell = mTargetCell;
       mCurrentCell.mCurrentPiece = this;
       transform.position = mCurrentCell.transform.position;
       mTargetCell = null;
+    }
+
+    public virtual void EnPassant(Cell cell, int curX, int curY) {
+
+    }
+
+    public void addBR(int num) {
+
     }
 
     public override void OnBeginDrag(PointerEventData eventData) {
@@ -195,47 +206,54 @@ public abstract class BasePiece : EventTrigger
     public override void OnEndDrag(PointerEventData eventData) {
       base.OnEndDrag(eventData);
       ClearCells();
-
       if (!mTargetCell) {
         transform.position = mCurrentCell.gameObject.transform.position;
         return;
       }
 
-      bool anyChecks = findChecks();
-      if(anyChecks == true) {
+      int curX = mCurrentCell.mBoardPosition.x;
+      int curY = mCurrentCell.mBoardPosition.y;
 
-      }
-      else {
-        Move();
-      }
-      ClearCells();
+      Move();
+      // the next line is old code
       mPieceManager.SwitchSides(mColor);
-      isKing = false;
-      anyChecks = false;
-      turnTracker = turnTracker + 1;
+
+      //en passant stuff
+      EnPassant(mCurrentCell, curX, curY);
+
+      if (bRight == true) {
+        Debug.Log("attempted");
+        mOtherCell = mAllCells[4,3];
+        mCurrentCell.mBoardPosition.x += 1;
+        mHighlightedCells.Add(mOtherCell.mBoard.mAllCells[mCurrentCell.mBoardPosition.x - 1, mCurrentCell.mBoardPosition.y - 1]);
+        bRight = false;
+      }
     }
 
     public bool findChecks() {
-      if (turnTracker % 2 == 0) {
-        // white is moving
-        foreach(BasePiece wPiece in mPieceManager.mWhitePieces) {
+      bool checksFound = false;
+//      if (turnTracker % 2 == 0) {
+        // looking for white's checks on the black king
+        for (int i = 0; i < mPieceManager.mWhitePieces.Count; i++) {
 // it does 16 of these
-          kingFinder(wPiece, false);
+          kingFinder(mPieceManager.mWhitePieces[i], false);
           if (isKing == true) {
-            anyChecks = true;
+            Debug.Log("anychecks1");
+            checksFound = true;
           }
-        }
+//        }
       }
-      else {
-        // black is moving
-        foreach(BasePiece bPiece in mPieceManager.mBlackPieces) {
+//      if (turnTracker % 2 == 1) {
+        // looking for black's checks on the white king
+        for (int i = 0; i < mPieceManager.mBlackPieces.Count; i++) {
 // it does 16 of these
-          kingFinder(bPiece, true);
+          kingFinder(mPieceManager.mBlackPieces[i], true);
           if (isKing == true) {
-            anyChecks = true;
+            Debug.Log("anychecks2");
+            checksFound = true;
           }
-        }
+//        }
       }
-      return anyChecks;
+      return checksFound;
     }
 }
