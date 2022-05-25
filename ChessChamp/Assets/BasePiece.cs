@@ -175,6 +175,7 @@ public abstract class BasePiece : EventTrigger
       mCurrentCell.mCurrentPiece = this;
       transform.position = mCurrentCell.transform.position;
       mTargetCell = null;
+      hasMoved = true;
     }
 
     public virtual void EnPassant(Cell cell, int curX, int curY) {
