@@ -6,18 +6,18 @@ using UnityEngine.UI;
 
 public class Pawn : BasePiece
 {
-  private bool hasMoved = false;
+  private bool hasMove = false;
 
   public override void Setup(Color newTeamColor, Color32 newSpriteColor, PieceManager newPieceManager) {
     base.Setup(newTeamColor, newSpriteColor, newPieceManager);
-    hasMoved = false;
+    hasMove = false;
     mMovement = mColor == Color.white ? new Vector3Int(0, 1, 1) : new Vector3Int(0, -1, -1);
     GetComponent<Image>().sprite = Resources.Load<Sprite>("T_Pawn");
   }
 
   protected override void Move() {
     base.Move();
-    hasMoved = true;
+    hasMove = true;
     PromotionCheck();
   }
 
@@ -95,7 +95,7 @@ public class Pawn : BasePiece
     MatchesState(currentX + mMovement.z, currentY + mMovement.z, CellState.Enemy);
 
     if (MatchesState(currentX, currentY + mMovement.y, CellState.Free)) {
-      if (!hasMoved) {
+      if (!hasMove) {
         MatchesState(currentX, currentY + (mMovement.y * 2), CellState.Free);
       }
     }

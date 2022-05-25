@@ -11,6 +11,7 @@ public abstract class BasePiece : EventTrigger
     public Color mColor = Color.clear;
     public bool isKing = false;
     public bool lastMove = false;
+    public bool hasMoved = false;
 
     public bool bRight = false;
     public bool plsHelp = true;
@@ -54,12 +55,14 @@ public abstract class BasePiece : EventTrigger
 
     public void Reset() {
       Kill();
+      hasMoved = false;
       Place(mOriginalCell);
     }
 
     public virtual void Kill() {
       mCurrentCell.mCurrentPiece = null;
       gameObject.SetActive(false);
+      hasMoved = false;
     }
 
     public bool HasMove() {
@@ -224,9 +227,9 @@ public abstract class BasePiece : EventTrigger
 
       if (bRight == true) {
         Debug.Log("attempted");
-        mOtherCell = mAllCells[4,3];
+//        mOtherCell = mAllCells[4,3];
         mCurrentCell.mBoardPosition.x += 1;
-        mHighlightedCells.Add(mOtherCell.mBoard.mAllCells[mCurrentCell.mBoardPosition.x - 1, mCurrentCell.mBoardPosition.y - 1]);
+        mHighlightedCells.Add(mCurrentCell.mBoard.mAllCells[mCurrentCell.mBoardPosition.x - 1, mCurrentCell.mBoardPosition.y - 1]);
         bRight = false;
       }
     }
