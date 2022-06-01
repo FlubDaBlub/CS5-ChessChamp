@@ -75,6 +75,13 @@ public abstract class BasePiece : EventTrigger
        return true;
    }
 
+   public void aiMove() {
+     int i = UnityEngine.Random.Range(0, mHighlightedCells.Count);
+     mTargetCell = mHighlightedCells[i];
+     Move();
+     mPieceManager.SwitchSides(mColor);
+   }
+
     private void CreateCellPath(int xDirection, int yDirection, int movement) {
       int currentX = mCurrentCell.mBoardPosition.x;
       int currentY = mCurrentCell.mBoardPosition.y;

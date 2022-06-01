@@ -98,6 +98,23 @@ public class PieceManager : MonoBehaviour
       }
     }
 
+    private void blackAIMove() {
+      BasePiece pieceToMove = null;
+        while (!pieceToMove)
+        {
+            // Get piece
+            int i = UnityEngine.Random.Range(0, mBlackPieces.Count);
+            BasePiece newPiece = mBlackPieces[i];
+            // Does this piece have any moves?
+            if (!newPiece.HasMove())
+                continue;
+            // Is piece active?
+            if (newPiece.gameObject.activeInHierarchy)
+                pieceToMove = newPiece;
+        }
+        pieceToMove.aiMove();
+    }
+
     public void SwitchSides(Color color) {
       //Resets an ended game
       if(!mIsKingAlive) {
@@ -109,12 +126,16 @@ public class PieceManager : MonoBehaviour
       bool isBlackTurn = color == Color.white ? true : false;
 
       SetInteractive(mWhitePieces, !isBlackTurn);
-      SetInteractive(mBlackPieces, isBlackTurn);
+      SetInteractive(mBlackPieces, false);
+      // normally isBlackTurn instead of false
 
       foreach(BasePiece piece in mPromotedPieces) {
         bool isBlack = piece.mColor != Color.white ? true : false;
         bool isOnTeam = isBlack == true ? isBlackTurn : !isBlackTurn;
         piece.enabled = isOnTeam;
+      }
+      if(isBlackTurn) {
+        blackAIMove();
       }
     }
 
