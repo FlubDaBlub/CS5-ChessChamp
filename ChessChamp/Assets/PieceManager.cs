@@ -9,6 +9,12 @@ public class PieceManager : MonoBehaviour
 
     [HideInInspector]
     public bool mIsKingAlive = true;
+    public bool rBlack = false;
+    public bool lBlack = false;
+    public bool rWhite = false;
+    public bool lWhite = false;
+    public int x = 10;
+    public int y = 10;
 
     public GameObject mPiecePrefab;
 
@@ -144,5 +150,59 @@ public class PieceManager : MonoBehaviour
         promotedPiece.Setup(teamColor, spriteColor, this);
         promotedPiece.Place(cell);
         mPromotedPieces.Add(promotedPiece);
+      }
+
+//en passant stuff
+      public void currentX(int curX) {
+        x = curX;
+      }
+      public void currentY(int curY) {
+        y = curY;
+      }
+      public int getX() {
+        return x;
+      }
+      public int getY() {
+        return y;
+      }
+
+      public void bRightTrue() {
+        rBlack = true;
+      }
+      public void bRightFalse() {
+        rBlack = false;
+      }
+      public bool getbRight() {
+        return rBlack;
+      }
+
+      public void bLeftTrue() {
+        lBlack = true;
+      }
+      public void bLeftFalse() {
+        lBlack = false;
+      }
+      public bool getbLeft() {
+        return lBlack;
+      }
+
+      public void wRightTrue() {
+        rWhite = true;
+      }
+      public void wRightFalse() {
+        rWhite = false;
+      }
+      public bool getwRight() {
+        return rWhite;
+      }
+
+      public void wLeftTrue() {
+        lWhite = true;
+      }
+      public void wLeftFalse() {
+        lWhite = false;
+      }
+      public bool getwLeft() {
+        return lWhite;
       }
 }

@@ -41,6 +41,10 @@ public class Board : MonoBehaviour
       }
     }
 
+    public Board getBoard() {
+      return this;
+    }
+
     public CellState ValidateCell(int targetX, int targetY, BasePiece checkingPiece) {
       if(targetX < 0 || targetX > 7) {
         return CellState.OutOfBounds;

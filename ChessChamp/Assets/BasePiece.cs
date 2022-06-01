@@ -14,7 +14,9 @@ public abstract class BasePiece : EventTrigger
     public bool hasMoved = false;
 
     public bool bRight = false;
-    public bool plsHelp = true;
+    public bool bLeft = false;
+    public bool wLeft = false;
+    public bool wRight = false;
 
     protected Cell mOriginalCell = null;
     protected Cell mCurrentCell = null;
@@ -30,6 +32,7 @@ public abstract class BasePiece : EventTrigger
 
     protected RectTransform mRectTransform = null;
     protected PieceManager mPieceManager;
+    protected Board newBoard;
 
     protected Cell mTargetCell = null;
 
@@ -190,8 +193,26 @@ public abstract class BasePiece : EventTrigger
     }
 
     public override void OnBeginDrag(PointerEventData eventData) {
+      int currentX = mCurrentCell.mBoardPosition.x;
+      int currentY = mCurrentCell.mBoardPosition.y;
       base.OnBeginDrag(eventData);
       CheckPathing();
+
+      //en passant stuff
+      int pawnX = mPieceManager.getX();
+      int pawnY = mPieceManager.getY();
+      if(mPieceManager.getbRight() == true && currentY == pawnY && currentX - 1 == pawnX) {
+        mHighlightedCells.Add(mCurrentCell.mBoard.mAllCells[currentX - 1, currentY - 1]);
+      }
+      if(mPieceManager.getbLeft() == true && currentY == pawnY && currentX + 1 == pawnX) {
+        mHighlightedCells.Add(mCurrentCell.mBoard.mAllCells[currentX + 1, currentY - 1]);
+      }
+      if(mPieceManager.getwRight() == true && currentY == pawnY && currentX - 1 == pawnX) {
+        mHighlightedCells.Add(mCurrentCell.mBoard.mAllCells[currentX - 1, currentY + 1]);
+      }
+      if(mPieceManager.getwLeft() == true && currentY == pawnY && currentX + 1 == pawnX) {
+        mHighlightedCells.Add(mCurrentCell.mBoard.mAllCells[currentX + 1, currentY + 1]);
+      }
       ShowCells();
     }
 
@@ -217,22 +238,58 @@ public abstract class BasePiece : EventTrigger
 
       int curX = mCurrentCell.mBoardPosition.x;
       int curY = mCurrentCell.mBoardPosition.y;
-
       Move();
       // the next line is old code
       mPieceManager.SwitchSides(mColor);
 
       //en passant stuff
+      int currentX = mCurrentCell.mBoardPosition.x;
+      int currentY = mCurrentCell.mBoardPosition.y;
+
+      if(mPieceManager.getbRight() == true && currentY == curY - 1 && currentX == curX - 1) {
+        mOtherCell = mCurrentCell.mBoard.mAllCells[currentX, currentY + 1];
+        mOtherCell.RemovePiece();
+      }
+      if(mPieceManager.getbLeft() == true && currentY == curY - 1 && currentX == curX + 1) {
+        mOtherCell = mCurrentCell.mBoard.mAllCells[currentX, currentY + 1];
+        mOtherCell.RemovePiece();
+      }
+      if(mPieceManager.getwRight() == true && currentY == curY + 1 && currentX == curX - 1) {
+        mOtherCell = mCurrentCell.mBoard.mAllCells[currentX, currentY - 1];
+        mOtherCell.RemovePiece();
+      }
+      if(mPieceManager.getwLeft() == true && currentY == curY + 1 && currentX == curX + 1) {
+        mOtherCell = mCurrentCell.mBoard.mAllCells[currentX, currentY - 1];
+        mOtherCell.RemovePiece();
+      }
+
+      mPieceManager.bRightFalse();
+      mPieceManager.bLeftFalse();
+      mPieceManager.wRightFalse();
+      mPieceManager.wLeftFalse();
+
       EnPassant(mCurrentCell, curX, curY);
+      mPieceManager.currentX(currentX);
+      mPieceManager.currentY(currentY);
 
       if (bRight == true) {
-        Debug.Log("attempted");
-//        mOtherCell = mAllCells[4,3];
-        mCurrentCell.mBoardPosition.x += 1;
-        mHighlightedCells.Add(mCurrentCell.mBoard.mAllCells[mCurrentCell.mBoardPosition.x - 1, mCurrentCell.mBoardPosition.y - 1]);
+        mPieceManager.bRightTrue();
         bRight = false;
       }
+      if (bLeft == true) {
+        mPieceManager.bLeftTrue();
+        bLeft = false;
+      }
+      if (wRight == true) {
+        mPieceManager.wRightTrue();
+        wRight = false;
+      }
+      if (wLeft == true) {
+        mPieceManager.wLeftTrue();
+        wLeft = false;
+      }
     }
+
 
     public bool findChecks() {
       bool checksFound = false;

@@ -50,23 +50,23 @@ public class Pawn : BasePiece
                 bRight = true;
               }
               if(targetX - 1 == findPawn.mBoardPosition.x) {
-                //fill
+                bLeft = true;
               }
             }
           }
         }
       }
-      else if(mColor == Color.black) {
+      if(mColor == Color.black) {
         for(int i = 0; i < 8; i++) {
           Cell findPawn = mCurrentCell.mBoard.mAllCells[i, 4];
           if(findPawn.mCurrentPiece != null) {
             Sprite isPawnSprite = findPawn.mCurrentPiece.GetComponent<Image>().sprite;
             if(isPawnSprite == sprite && findPawn.mCurrentPiece.mColor == Color.white) {
               if(targetX + 1 == findPawn.mBoardPosition.x) {
-// fill
+                wRight = true;
               }
               if(targetX - 1 == findPawn.mBoardPosition.x) {
-                // fill
+                wLeft = true;
               }
             }
           }
