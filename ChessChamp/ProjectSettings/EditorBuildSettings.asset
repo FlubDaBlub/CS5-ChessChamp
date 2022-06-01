@@ -11,4 +11,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/BoardMaker.unity
     guid: ae3c0eb2198f04bb48bc63fc6fb8b9d0
+  - enabled: 1
+    path: Assets/PauseMenu.unity
+    guid: 0cd5bbc90071ec248bc4daf56dee2402
   m_configObjects: {}

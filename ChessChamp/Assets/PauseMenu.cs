@@ -7,7 +7,7 @@ public class PauseMenu : MonoBehaviour
 {
     public static bool GameIsPaused = false;
 
-    public GameObject PauseMenuUI;
+   
 
 
     // Update is called once per frame
@@ -27,14 +27,14 @@ public class PauseMenu : MonoBehaviour
 
     public void Resume()
     {
-        PauseMenuUI.SetActive(false);
+        SceneManager.LoadScene("BoardMaker");
         Time.timeScale = 1f;
         GameIsPaused = false;
     }
 
     void Pause()
     {
-        PauseMenuUI.SetActive(true);
+        SceneManager.LoadScene("PauseMenu");
         Time.timeScale = 0f;
         GameIsPaused = true;
     }
